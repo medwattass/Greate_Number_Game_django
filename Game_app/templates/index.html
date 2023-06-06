@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Number Game</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container bg-dark text-center">
+
+        <h1 class="text-light text-center">Welcome to the Greate Number Game</h1>
+        <h3 class="text-light text-center">I'm thinking of a number between 1 and 100</h3>
+        <h3 class="text-light text-center">Take a guess! no more than 5 attempts!</h3>
+
+        {% if request.session.guessed == 1 %}
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-6 bg-danger m-3 d-flex align-items-center justify-content-center" style="height:15rem;">
+                <h2 class="text-light text-center">Too high!</h2>
+            </div>
+        </div>
+        {% elif request.session.guessed == -1 %}
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-6 bg-danger m-3 d-flex align-items-center justify-content-center" style="height:15rem;">
+                <h2 class="text-light text-center align-text">Too low!</h2>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if request.session.guessed == 0 %}
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-6 bg-success m-3" style="padding-top:5%; height:15rem;">
+                <h1 class="text-light text-center">{{request.session.number}} was the number! you took {{request.session.guess_attempts}} attempts</h1>
+                <form class="form-group" action='/destroy_session' method='post'>
+                    {% csrf_token %}
+                    <button class="btn btn-primary m-3" type='submit'>Play again!</button>
+                </form>
+            </div>
+        </div>
+
+        {% elif request.session.guessed == -2 %}
+
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-6 bg-danger m-3" style="padding-top:5%; height:15rem;">
+                <h1 class="text-light text-center">{{request.session.number}} was the number! you lost!</h1>
+                <form class="form-group" action='/destroy_session' method='post'>
+                    {% csrf_token %}
+                    <button class="btn btn-primary m-3" type='submit'>Play again!</button>
+                </form>
+            </div>
+        </div>
+
+        {% else %}
+
+        <form class="form-group" action='/guessing' method='post'>
+            {% csrf_token %}
+            <input class="form-control input-lg text-center" type='number' name='guessing' style="width: 10%; margin-left:45%;" required>
+            <button class="btn btn-secondary m-3" type='submit'>Submit</button>
+        </form>
+
+        <form class="form-group" action='/destroy_session' method='post'>
+            {% csrf_token %}
+            <button class="btn btn-danger mb-3" type='submit'>Reset</button>
+        </form>
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
